@@ -1,13 +1,42 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 
-export default function HomeScreen() {
+async function sign_out() {
+  await signOut(auth);
+}
+
+export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Image
         style={styles.img}
         source={require("../assets/AdventureAtlas-logo.png")}
       />
-      <Text style={styles.text}>Velkommen til forside</Text>
+      <Text style={styles.text}>Klik på det, du gerne vil opnå.</Text>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("NewTravel")}
+      >
+        <Text style={styles.buttonText}> Lav en ny rejseplan</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("AllTravels")}
+      >
+        <Text style={styles.buttonText}> Se alle dine rejseplaner</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Map")}
+      >
+        <Text style={styles.buttonText}> Besøgte destinationer</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttonSignOut} onPress={sign_out}>
+        <Text style={styles.buttonText}> Log ud</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -26,7 +55,26 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   text: {
-    fontSize: 20,
+    fontSize: 25,
+    marginVertical: 15,
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: "#05a4c8",
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 15,
+  },
+  buttonText: {
+    color: "#000000",
+    fontSize: 15,
     fontWeight: "bold",
+  },
+  buttonSignOut: {
+    alignItems: "center",
+    backgroundColor: "#05a4c8",
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 75,
   },
 });
