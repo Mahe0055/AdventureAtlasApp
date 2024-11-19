@@ -15,10 +15,10 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Hjem" component={HomeScreen} />
-        <Stack.Screen name="NewTravel" component={NewTravelScreen} />
-        <Stack.Screen name="AllTravels" component={AllTravelsScreen} />
-        <Stack.Screen name="TravelDetails" component={TravelDetailsScreen} />
-        <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Screen name="NyRejse" component={NewTravelScreen} />
+        <Stack.Screen name="Rejser" component={AllTravelsScreen} />
+        <Stack.Screen name="RejseDetaljer" component={TravelDetailsScreen} />
+        <Stack.Screen name="Kort" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

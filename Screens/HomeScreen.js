@@ -2,8 +2,13 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 
-async function sign_out() {
-  await signOut(auth);
+async function sign_out(navigation) {
+  try {
+    await signOut(auth);
+    navigation.navigate("Login");
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export default function HomeScreen({ navigation }) {
@@ -17,24 +22,27 @@ export default function HomeScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("NewTravel")}
+        onPress={() => navigation.navigate("NyRejse")}
       >
         <Text style={styles.buttonText}> Lav en ny rejseplan</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("AllTravels")}
+        onPress={() => navigation.navigate("Rejser")}
       >
         <Text style={styles.buttonText}> Se alle dine rejseplaner</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Map")}
+        onPress={() => navigation.navigate("Kort")}
       >
         <Text style={styles.buttonText}> Besøgte destinationer</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.buttonSignOut} onPress={sign_out}>
+      <TouchableOpacity
+        style={styles.buttonSignOut}
+        onPress={() => sign_out(navigation)}
+      >
         <Text style={styles.buttonText}> Log ud</Text>
       </TouchableOpacity>
     </View>

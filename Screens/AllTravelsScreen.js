@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function AllTravelsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Hej med dig</Text>
+      <Text style={styles.text}>Alle rejseplaner</Text>
     </View>
   );
 }
