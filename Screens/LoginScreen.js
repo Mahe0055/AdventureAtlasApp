@@ -15,11 +15,12 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import HomeScreen from "./HomeScreen";
+import { useUser } from "../Context";
 
 export default function LoginScreen({ navigation }) {
   const [enteredEmail, setEnteredEmail] = useState("test@gmail.com");
   const [enteredPassword, setEnteredPassword] = useState("123456");
-  const [userId, setUserId] = useState(null);
+  const { userId, setUserId } = useUser();
 
   useEffect(() => {
     const auth_ = getAuth();
@@ -40,7 +41,8 @@ export default function LoginScreen({ navigation }) {
         enteredEmail,
         enteredPassword
       );
-      console.log("Du er logget ind " + userCredential.user.id);
+      alert("Du er logget ind ");
+      console.log("Du er logget ind " + userCredential.user.uid);
       navigation.navigate("Hjem");
     } catch (error) {}
   }

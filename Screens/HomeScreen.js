@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
 
-async function sign_out(navigation) {
+async function sign_out({ navigation }) {
   try {
     await signOut(auth);
     navigation.navigate("Login");
@@ -11,7 +12,8 @@ async function sign_out(navigation) {
   }
 }
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image

@@ -1,15 +1,32 @@
-import { StyleSheet, Text, View } from "react-native";
-import { database } from "./firebase";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { database } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { useUser } from "../Context";
 
-export default function NewTravelScreen() {
-  const [country, setCountry] = useState("");
-  const [city, setCity] = useState("");
-  const [vacationType, setVacationType] = useState("");
-  const [startDate, setStartDate] = useState(Date);
-  const [endDate, setEndDate] = useState(Date);
-  const [sights, setSights] = useState([]);
-  const [eatingPlaces, setEatingPlaces] = useState([]);
+export default function NewTravelScreen({ navigation }) {
+  const {
+    userId,
+    country,
+    setCountry,
+    city,
+    setCity,
+    vacationType,
+    setVacationType,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    sights,
+    setSights,
+    eatingPlaces,
+    setEatingPlaces,
+  } = useUser();
 
   async function addDocument() {
     try {
@@ -17,11 +34,12 @@ export default function NewTravelScreen() {
         Land: country,
         By: city,
         Ferietype: vacationType,
-        Startdato: startDate,
-        Slutdato: endDate,
-        Seværdigheder: sights,
-        Spisesteder: eatingPlaces,
+        Startdato: Timestamp.fromDate(new Date(startDate)),
+        Slutdato: Timestamp.fromDate(new Date(endDate)),
+        Seværdigheder: sights.split(",").map((sight) => sight.trim()), // Convert comma-separated string to array
+        Spisesteder: eatingPlaces.split(",").map((place) => place.trim()),
       });
+      alert("Din rejse er oprettet og gemt");
     } catch (error) {
       console.log("error addDocument " + error);
     }
@@ -29,7 +47,7 @@ export default function NewTravelScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Planlæg en ny rejse</Text>
+      <Text style={styles.headline}>Planlæg en ny rejse</Text>
       <Text style={styles.text}>Land</Text>
       <TextInput
         style={styles.inputBox}
@@ -73,9 +91,30 @@ export default function NewTravelScreen() {
         value={eatingPlaces}
       />
 
-      <TouchableOpacity style={styles.button} onPress={addDocument}>
-        <Text style={styles.buttonText}> Opret ny rejseplan</Text>
+      <TouchableOpacity style={styles.buttonNewTravel} onPress={addDocument}>
+        <Text style={styles.buttonTextNewTravel}> Opret ny rejseplan</Text>
       </TouchableOpacity>
+
+      <View style={styles.menuBar}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Hjem")}
+        >
+          <Text style={styles.buttonText}> Hjem</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Rejser")}
+        >
+          <Text style={styles.buttonText}> Rejser</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Kort")}
+        >
+          <Text style={styles.buttonText}> Kort</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -88,8 +127,54 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: 30, // Aftstand fra top af skærm
   },
-  text: {
+  headline: {
     fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 20,
+  },
+  text: {
+    fontSize: 15,
+  },
+  menuBar: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    flexDirection: "row",
+    backgroundColor: "#0d6fe5",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+  },
+  button: {
+    alignItems: "center",
+    padding: 15,
+    justifyContent: "center",
+  },
+  buttonText: {
+    color: "#ffff",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  buttonNewTravel: {
+    alignItems: "center",
+    backgroundColor: "#05a4c8",
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 15,
+  },
+  buttonTextNewTravel: {
+    color: "#000000",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  inputBox: {
+    width: "70%",
+    height: 30,
+    borderColor: "black", //sort kant
+    borderWidth: 2,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: "#f5f5f5",
+    fontSize: 14,
   },
 });
