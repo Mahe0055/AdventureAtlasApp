@@ -8,6 +8,7 @@ import {
 import { database } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useUser } from "../Context";
+import { Timestamp } from "firebase/firestore";
 
 export default function NewTravelScreen({ navigation }) {
   const {
