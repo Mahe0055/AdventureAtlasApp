@@ -4,11 +4,13 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { database } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useUser } from "../Context";
 import { Timestamp } from "firebase/firestore";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function NewTravelScreen({ navigation }) {
   const {
@@ -28,6 +30,20 @@ export default function NewTravelScreen({ navigation }) {
     eatingPlaces,
     setEatingPlaces,
   } = useUser();
+
+  const onChangeStartDate = (event, value) => {
+    setStartDate(value);
+    if (Platform.OS === "android") {
+      setIsPickerShow(false);
+    }
+  };
+
+  const onChangeEndDate = (event, value) => {
+    setEndDate(value);
+    if (Platform.OS === "android") {
+      setIsPickerShow(false);
+    }
+  };
 
   async function addDocument() {
     try {
@@ -68,16 +84,18 @@ export default function NewTravelScreen({ navigation }) {
         value={vacationType}
       />
       <Text style={styles.text}>Startdato</Text>
-      <TextInput
-        style={styles.inputBox}
-        onChangeText={(newStartDate) => setStartDate(newStartDate)}
+      <DateTimePicker
         value={startDate}
+        mode={"date"}
+        onChange={onChangeStartDate}
+        style={styles.inputBox}
       />
       <Text style={styles.text}>Slutdato</Text>
-      <TextInput
-        style={styles.inputBox}
-        onChangeText={(newEndDate) => setEndDate(newEndDate)}
+      <DateTimePicker
         value={endDate}
+        mode={"date"}
+        onChangeText={onChangeEndDate}
+        style={styles.inputBox}
       />
       <Text style={styles.text}>Seværdigheder</Text>
       <TextInput

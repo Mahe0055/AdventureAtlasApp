@@ -12,6 +12,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { database } from "../firebase";
 import { Alert } from "react-native";
 import { arrayRemove } from "firebase/firestore";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function TravelDetailscreen({ navigation, route }) {
   const { travelPlans } = route.params;
@@ -20,15 +21,14 @@ export default function TravelDetailscreen({ navigation, route }) {
 
   async function handleEdit(field, value) {
     setEditableField(field);
-    setNewValue(value);
+    if (field === "Startdato" || field === "Slutdato") {
+      setNewValue(new Date(value)); // Ensure it's a Date object
+    } else {
+      setNewValue(value);
+    }
   }
 
-  async function SaveNewValue(field) {
-    if (!newValue.trim()) {
-      Alert.alert("Fejl", "Venligst indtast gyldig værdi.");
-      return;
-    }
-
+  async function SaveNewValue() {
     try {
       const travelDocRef = doc(
         database,
@@ -36,9 +36,14 @@ export default function TravelDetailscreen({ navigation, route }) {
         travelPlans.id
       );
 
+      let updatedValue = newValue;
+      if (editableField === "Startdato" || editableField === "Slutdato") {
+        updatedValue = Timestamp.fromDate(new Date(newValue)); // Convert to Firestore Timestamp
+      }
+
       // Update the specific field in Firestore
       await updateDoc(travelDocRef, {
-        [editableField]: newValue,
+        [editableField]: updatedValue,
       });
 
       // Update the state to reflect the changes on the screen
@@ -130,10 +135,12 @@ export default function TravelDetailscreen({ navigation, route }) {
         <Text style={styles.text}>
           Startdato:{" "}
           {editableField === "Startdato" ? (
-            <TextInput
-              style={styles.input}
+            <DateTimePicker
               value={newValue}
-              onChangeText={setNewValue}
+              mode="date"
+              onChange={(event, selectedDate) =>
+                setNewValue(selectedDate || newValue)
+              }
             />
           ) : (
             travelPlans.Startdato
@@ -153,10 +160,12 @@ export default function TravelDetailscreen({ navigation, route }) {
         <Text style={styles.text}>
           Slutdato:{" "}
           {editableField === "Slutdato" ? (
-            <TextInput
-              style={styles.input}
+            <DateTimePicker
               value={newValue}
-              onChangeText={setNewValue}
+              mode="date"
+              onChange={(event, selectedDate) =>
+                setNewValue(selectedDate || newValue)
+              }
             />
           ) : (
             travelPlans.Slutdato
