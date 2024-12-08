@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff", // Hvid baggrund
-    alignItems: "center", // Elementer placeres i midten af skærm
+    alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 30, // Aftstand fra top af skærm
   },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     flexDirection: "row",
-    backgroundColor: "#0d6fe5",
+    backgroundColor: "#0d6fe5", // Blå
     justifyContent: "space-around",
     paddingVertical: 10,
   },

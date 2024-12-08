@@ -12,20 +12,15 @@ import { doc, updateDoc } from "firebase/firestore";
 import { database } from "../firebase";
 import { Alert } from "react-native";
 import { arrayRemove } from "firebase/firestore";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function TravelDetailscreen({ navigation, route }) {
   const { travelPlans } = route.params;
-  const [editableField, setEditableField] = useState(null); // to track which field is being edited
-  const [newValue, setNewValue] = useState(""); // for storing the new value to be saved
+  const [editableField, setEditableField] = useState(null);
+  const [newValue, setNewValue] = useState("");
 
   async function handleEdit(field, value) {
     setEditableField(field);
-    if (field === "Startdato" || field === "Slutdato") {
-      setNewValue(new Date(value)); // Ensure it's a Date object
-    } else {
-      setNewValue(value);
-    }
+    setNewValue(value);
   }
 
   async function SaveNewValue() {
@@ -36,21 +31,19 @@ export default function TravelDetailscreen({ navigation, route }) {
         travelPlans.id
       );
 
-      let updatedValue = newValue;
-      if (editableField === "Startdato" || editableField === "Slutdato") {
-        updatedValue = Timestamp.fromDate(new Date(newValue)); // Convert to Firestore Timestamp
-      }
-
-      // Update the specific field in Firestore
+      // Opdaterer specifikt felt i FB Firestore
       await updateDoc(travelDocRef, {
-        [editableField]: updatedValue,
+        [editableField]: newValue,
       });
 
-      // Update the state to reflect the changes on the screen
-      const updatedTravelPlans = { ...travelPlans, [editableField]: newValue };
-      route.params = { travelPlans: updatedTravelPlans }; // Update the route param with the updated data
+      // Opdaterer state ændringer på skærmen
+      const updatedTravelPlans = {
+        ...travelPlans,
+        [editableField]: newValue,
+      };
+      route.params = { travelPlans: updatedTravelPlans };
 
-      setEditableField(null); // Reset editable field
+      setEditableField(null);
       Alert.alert("Succesfuld", "Dine ændringer er gemt.");
     } catch (error) {
       console.error("Fejl ved gem af data: ", error);
@@ -67,11 +60,11 @@ export default function TravelDetailscreen({ navigation, route }) {
       );
 
       if (field === "Seværdigheder") {
-        // Remove from Seværdigheder array
+        // Fjerner fra Seværdigheder array
         await updateDoc(travelDocRef, {
           Seværdigheder: arrayRemove(value),
         });
-        // Update local state for immediate UI update
+        // Opdaterer lokal state for øjeblikkelig UI opdatering
         setUpdatedTravelPlans({
           ...updatedTravelPlans,
           Seværdigheder: travelPlans.Seværdigheder.filter(
@@ -81,11 +74,9 @@ export default function TravelDetailscreen({ navigation, route }) {
       }
 
       if (field === "Spisesteder") {
-        // Remove from Spisesteder array
         await updateDoc(travelDocRef, {
           Spisesteder: arrayRemove(value),
         });
-        // Update local state for immediate UI update
         setUpdatedTravelPlans({
           ...updatedTravelPlans,
           Spisesteder: updatedTravelPlans.Spisesteder.filter(
@@ -94,7 +85,6 @@ export default function TravelDetailscreen({ navigation, route }) {
         });
       }
 
-      // Show success message
       Alert.alert("Succesfuld", `${value} er blevet slettet.`);
     } catch (error) {
       console.error("Fejl ved sletning af data: ", error);
@@ -135,12 +125,10 @@ export default function TravelDetailscreen({ navigation, route }) {
         <Text style={styles.text}>
           Startdato:{" "}
           {editableField === "Startdato" ? (
-            <DateTimePicker
+            <TextInput
+              style={styles.input}
               value={newValue}
-              mode="date"
-              onChange={(event, selectedDate) =>
-                setNewValue(selectedDate || newValue)
-              }
+              onChangeText={setNewValue}
             />
           ) : (
             travelPlans.Startdato
@@ -160,12 +148,10 @@ export default function TravelDetailscreen({ navigation, route }) {
         <Text style={styles.text}>
           Slutdato:{" "}
           {editableField === "Slutdato" ? (
-            <DateTimePicker
+            <TextInput
+              style={styles.input}
               value={newValue}
-              mode="date"
-              onChange={(event, selectedDate) =>
-                setNewValue(selectedDate || newValue)
-              }
+              onChangeText={setNewValue}
             />
           ) : (
             travelPlans.Slutdato
@@ -281,7 +267,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff", // Hvid baggrund
-    alignItems: "center", // Elementer placeres i midten af skærm
+    alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 30, // Aftstand fra top af skærm
   },
@@ -295,7 +281,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     flexDirection: "row",
-    backgroundColor: "#0d6fe5",
+    backgroundColor: "#0d6fe5", // Blå
     justifyContent: "space-around",
     paddingVertical: 10,
   },
@@ -322,7 +308,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#ccc", // Grå
     padding: 5,
     marginTop: 5,
   },

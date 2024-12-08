@@ -9,11 +9,13 @@ import MapScreen from "./Screens/MapScreen";
 import { UserContextProvider } from "./Context";
 
 export default function App() {
+  //Opretter Stack navigator til navigation
   const Stack = createNativeStackNavigator();
 
   return (
     <UserContextProvider>
       <NavigationContainer>
+        {/* Tilføjer screens til at navigere rundt i */}
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Hjem" component={HomeScreen} />

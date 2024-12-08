@@ -3,7 +3,7 @@ import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
-async function sign_out({ navigation }) {
+async function sign_out(navigation) {
   try {
     await signOut(auth);
     navigation.navigate("Login");
@@ -14,6 +14,7 @@ async function sign_out({ navigation }) {
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Image
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff", // Hvid baggrund
-    alignItems: "center", // Elementer placeres i midten af skærm
+    alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 30, // Aftstand fra top af skærm
   },
@@ -70,13 +71,13 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#05a4c8",
+    backgroundColor: "#05a4c8", // Aqua blå
     padding: 15,
     borderRadius: 5,
     marginVertical: 15,
   },
   buttonText: {
-    color: "#000000",
+    color: "#000000", // Sort
     fontSize: 15,
     fontWeight: "bold",
   },

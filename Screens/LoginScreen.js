@@ -22,6 +22,7 @@ export default function LoginScreen({ navigation }) {
   const [enteredPassword, setEnteredPassword] = useState("123456");
   const { userId, setUserId } = useUser();
 
+  // Kontrollerer brugers loginstatus
   useEffect(() => {
     const auth_ = getAuth();
     const unsubcribe = onAuthStateChanged(auth_, (currentUser) => {
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff", // Hvid baggrund
-    alignItems: "center", // Elementer placeres i midten af skærm
+    alignItems: "center",
     justifyContent: "flex-start",
   },
   img: {
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
     borderRadius: 8,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f5f5f5", // Grå
     fontSize: 14,
   },
 });

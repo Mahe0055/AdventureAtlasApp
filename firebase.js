@@ -21,15 +21,15 @@ const firebaseConfig = {
   appId: "1:14307198427:web:7990c8e874e70cbe1953fe",
 };
 
-// Initialize Firebase
+// Initialiserer Firebase
 const app = initializeApp(firebaseConfig);
 const database = getFirestore(app);
 export { app, database };
 
-// Initialize Auth
+// Initialiserer Auth
 export const auth =
   Platform.OS === "web"
-    ? getAuth(app)
+    ? getAuth(app) // Hvis Platform er web, intialiseres 'getAuth'
     : initializeAuth(app, {
         persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-      });
+      }); // Hvis Platform er Android/IOS, bruges AnsyncStorage

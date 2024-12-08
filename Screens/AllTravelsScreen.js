@@ -10,20 +10,20 @@ export default function AllTravelsScreen({ navigation }) {
 
   useEffect(() => {
     async function fetchTravelPlans() {
-      if (!userId) return; // Ensure userId is available
+      if (!userId) return; // Sikrer om userId er tilgængelig
       try {
-        const travelPlansRef = collection(database, userId); // Reference to the user's collection
+        const travelPlansRef = collection(database, userId); // Reference til user's collection
         const snapshot = await getDocs(travelPlansRef);
+        //Mapper over dokumenterne
         const fetchedPlans = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setDestinations(fetchedPlans); // Store the fetched plans in state
+        setDestinations(fetchedPlans); //Opdaterer state
       } catch (error) {
         console.error("Error fetching travel plans:", error);
       }
     }
-
     fetchTravelPlans();
   }, [userId]);
 
@@ -32,9 +32,10 @@ export default function AllTravelsScreen({ navigation }) {
       <Text style={styles.headline}>Alle rejseplaner</Text>
 
       <View style={styles.destinationsContainer}>
+        {/* Mapper hver destination */}
         {destinations.map((destination, index) => (
           <TouchableOpacity
-            key={index}
+            key={index} // Unik identikator
             style={styles.destinationBox}
             onPress={() =>
               navigation.navigate("RejseDetaljer", { travelPlans: destination })
@@ -47,6 +48,7 @@ export default function AllTravelsScreen({ navigation }) {
         ))}
       </View>
 
+      {/* Menubar bestående af navigation til 'Hjem', 'NyRejse' og 'Kort' */}
       <View style={styles.menuBar}>
         <TouchableOpacity
           style={styles.button}
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff", // Hvid baggrund
-    alignItems: "center", // Elementer placeres i midten af skærm
+    alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 30, // Aftstand fra top af skærm
   },
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     flexDirection: "row",
-    backgroundColor: "#0d6fe5",
+    backgroundColor: "#0d6fe5", // Blå
     justifyContent: "space-around",
     paddingVertical: 10,
   },
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     width: "45%",
     marginBottom: 15,
     marginTop: 40,
-    backgroundColor: "#00e194",
+    backgroundColor: "#00e194", // Grøn
     padding: 10,
     borderRadius: 8,
     borderColor: "black",

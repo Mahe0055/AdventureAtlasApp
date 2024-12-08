@@ -4,13 +4,10 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 import { database } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useUser } from "../Context";
-import { Timestamp } from "firebase/firestore";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function NewTravelScreen({ navigation }) {
   const {
@@ -31,29 +28,15 @@ export default function NewTravelScreen({ navigation }) {
     setEatingPlaces,
   } = useUser();
 
-  const onChangeStartDate = (event, value) => {
-    setStartDate(value);
-    if (Platform.OS === "android") {
-      setIsPickerShow(false);
-    }
-  };
-
-  const onChangeEndDate = (event, value) => {
-    setEndDate(value);
-    if (Platform.OS === "android") {
-      setIsPickerShow(false);
-    }
-  };
-
   async function addDocument() {
     try {
       await addDoc(collection(database, userId), {
         Land: country,
         By: city,
         Ferietype: vacationType,
-        Startdato: Timestamp.fromDate(new Date(startDate)),
-        Slutdato: Timestamp.fromDate(new Date(endDate)),
-        Seværdigheder: sights.split(",").map((sight) => sight.trim()), // Convert comma-separated string to array
+        Startdato: startDate,
+        Slutdato: endDate,
+        Seværdigheder: sights.split(",").map((sight) => sight.trim()), // Konverter komma-separateret string til array
         Spisesteder: eatingPlaces.split(",").map((place) => place.trim()),
       });
       alert("Din rejse er oprettet og gemt");
@@ -84,30 +67,30 @@ export default function NewTravelScreen({ navigation }) {
         value={vacationType}
       />
       <Text style={styles.text}>Startdato</Text>
-      <DateTimePicker
-        value={startDate}
-        mode={"date"}
-        onChange={onChangeStartDate}
+      <TextInput
         style={styles.inputBox}
+        value={startDate}
+        placeholder="dd-mm-åååå"
+        onChangeText={(newStartDate) => setStartDate(newStartDate)}
       />
       <Text style={styles.text}>Slutdato</Text>
-      <DateTimePicker
-        value={endDate}
-        mode={"date"}
-        onChangeText={onChangeEndDate}
+      <TextInput
         style={styles.inputBox}
+        value={endDate}
+        placeholder="dd-mm-åååå"
+        onChangeText={(newEndDate) => setEndDate(newEndDate)}
       />
       <Text style={styles.text}>Seværdigheder</Text>
       <TextInput
         style={styles.inputBox}
-        onChangeText={(newSights) => setSights(newSights)}
         value={sights}
+        onChangeText={(newSights) => setSights(newSights)}
       />
       <Text style={styles.text}>Spisesteder</Text>
       <TextInput
         style={styles.inputBox}
-        onChangeText={(newEatingPlaces) => setEatingPlaces(newEatingPlaces)}
         value={eatingPlaces}
+        onChangeText={(newEatingPlaces) => setEatingPlaces(newEatingPlaces)}
       />
 
       <TouchableOpacity style={styles.buttonNewTravel} onPress={addDocument}>
@@ -142,7 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff", // Hvid baggrund
-    alignItems: "center", // Elementer placeres i midten af skærm
+    alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 30, // Aftstand fra top af skærm
   },
@@ -159,7 +142,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     flexDirection: "row",
-    backgroundColor: "#0d6fe5",
+    backgroundColor: "#0d6fe5", // Blå
     justifyContent: "space-around",
     paddingVertical: 10,
   },
@@ -175,13 +158,13 @@ const styles = StyleSheet.create({
   },
   buttonNewTravel: {
     alignItems: "center",
-    backgroundColor: "#05a4c8",
+    backgroundColor: "#05a4c8", // Aqua blå
     padding: 15,
     borderRadius: 5,
     marginVertical: 15,
   },
   buttonTextNewTravel: {
-    color: "#000000",
+    color: "#000000", // Sort
     fontSize: 15,
     fontWeight: "bold",
   },
@@ -193,7 +176,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
     borderRadius: 8,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f5f5f5", // Grå
     fontSize: 14,
   },
 });
