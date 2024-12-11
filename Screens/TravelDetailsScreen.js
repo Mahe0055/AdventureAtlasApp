@@ -64,25 +64,18 @@ export default function TravelDetailscreen({ navigation, route }) {
         await updateDoc(travelDocRef, {
           Seværdigheder: arrayRemove(value),
         });
-        // Opdaterer lokal state for øjeblikkelig UI opdatering
-        setUpdatedTravelPlans({
-          ...updatedTravelPlans,
-          Seværdigheder: travelPlans.Seværdigheder.filter(
-            (sight) => sight !== value
-          ),
-        });
+        // Opdaterer `travelPlans` i `route.params`
+        route.params.travelPlans.Seværdigheder =
+          travelPlans.Seværdigheder.filter((sight) => sight !== value);
       }
 
       if (field === "Spisesteder") {
         await updateDoc(travelDocRef, {
           Spisesteder: arrayRemove(value),
         });
-        setUpdatedTravelPlans({
-          ...updatedTravelPlans,
-          Spisesteder: updatedTravelPlans.Spisesteder.filter(
-            (place) => place !== value
-          ),
-        });
+        route.params.travelPlans.Spisesteder = travelPlans.Spisesteder.filter(
+          (eatingPlace) => eatingPlace !== value
+        );
       }
 
       Alert.alert("Succesfuld", `${value} er blevet slettet.`);
