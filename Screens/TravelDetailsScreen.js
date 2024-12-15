@@ -31,17 +31,25 @@ export default function TravelDetailscreen({ navigation, route }) {
         travelPlans.id
       );
 
-      // Opdaterer specifikt felt i FB Firestore
-      await updateDoc(travelDocRef, {
-        [editableField]: newValue,
-      });
+      if (editableField.startsWith("Seværdigheder-")) {
+        const index = parseInt(editableField.split("-")[1], 10);
+        const updatedSights = [...travelPlans.Seværdigheder];
+        updatedSights[index] = newValue;
 
-      // Opdaterer state ændringer på skærmen
-      const updatedTravelPlans = {
-        ...travelPlans,
-        [editableField]: newValue,
-      };
-      route.params = { travelPlans: updatedTravelPlans };
+        await updateDoc(travelDocRef, { Seværdigheder: updatedSights });
+        travelPlans.Seværdigheder = updatedSights; // Opdater lokalt
+      } else if (editableField.startsWith("Spisesteder-")) {
+        const index = parseInt(editableField.split("-")[1], 10);
+        const updatedEats = [...travelPlans.Spisesteder];
+        updatedEats[index] = newValue;
+
+        await updateDoc(travelDocRef, { Spisesteder: updatedEats });
+        travelPlans.Spisesteder = updatedEats; // Opdater lokalt
+      } else {
+        await updateDoc(travelDocRef, { [editableField]: newValue });
+
+        travelPlans[editableField] = newValue; // Opdater lokalt
+      }
 
       setEditableField(null);
       Alert.alert("Succesfuld", "Dine ændringer er gemt.");
